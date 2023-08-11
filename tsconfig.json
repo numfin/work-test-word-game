@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "strict": true,
+    "target": "ESNext",
+    "moduleResolution": "Node",
+    "sourceMap": true
+  },
+  "exclude": ["node_modules"]
+}
