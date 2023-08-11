@@ -4,6 +4,7 @@ import { Runtime } from "./renderer/reactivity";
 import { LetterPanel } from "./ui/letter-panel";
 import { gameFactory } from "./logic/game/game-factory";
 import { GameStore } from "./logic/game/game-store";
+import { El } from "./renderer/el";
 
 function main() {
   const cx = new Runtime();
@@ -29,17 +30,18 @@ function main() {
     GameStore.save(game.get());
   });
 
+  mount(document.querySelector("#answer")!, AnswerPanel(cx, { game }));
+  mount(document.querySelector("#letters")!, LetterPanel(cx, { game }));
+
   mount(
-    document.querySelector("#answer")!,
-    AnswerPanel(cx, {
-      game,
-    })
+    document.querySelector("#current_question")!,
+    El.new("span").textDyn(cx, () =>
+      (game.get().currentRoundIndex + 1).toString()
+    )
   );
   mount(
-    document.querySelector("#letters")!,
-    LetterPanel(cx, {
-      game,
-    })
+    document.querySelector("#total_questions")!,
+    El.new("span").textDyn(cx, () => game.get().rounds.length.toString())
   );
 }
 
