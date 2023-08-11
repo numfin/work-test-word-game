@@ -8,7 +8,7 @@ interface GameState {
     word: string;
     currentErrors: number;
     pickedIndexes: number[];
-    surrender: boolean;
+    abandoned: boolean;
     randomWordLetters: string[];
   }[];
 }
@@ -29,13 +29,13 @@ export class GameStore {
   }
 
   static save(game: Game) {
-    const gameState = {
+    const gameState: GameState = {
       currentRoundIndex: game.currentRoundIndex,
       rounds: game.rounds.map((r) => ({
         word: r.word,
         currentErrors: r.currentErrors,
         pickedIndexes: Array.from(r.pickedIndexes.values()),
-        surrender: r.surrender,
+        abandoned: r.abandoned,
         randomWordLetters: r.randomWordLetters,
       })),
     };
@@ -54,11 +54,11 @@ export class GameStore {
       savedRound.pickedIndexes.forEach((index) =>
         newRound.pickedIndexes.add(index)
       );
-      newRound.surrender = savedRound.surrender;
+      newRound.abandoned = savedRound.abandoned;
       game.addRound(newRound);
     }
     game.currentRoundIndex = gameState.currentRoundIndex;
-    if (game.currentRound().surrender) {
+    if (game.currentRound().abandoned) {
       game.nextRound();
     }
   }

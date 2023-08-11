@@ -3,7 +3,7 @@ const MAX_ROUND_ERRORS = 3;
 export class Round {
   private maxErrors = MAX_ROUND_ERRORS;
   public pickedIndexes = new Set<number>();
-  public surrender = false;
+  public abandoned = false;
 
   constructor(
     private game: Game,
@@ -18,7 +18,7 @@ export class Round {
       .filter(({ index }) => !this.pickedIndexes.has(index));
   }
   guess(randomLetterIndex: number) {
-    if (this.surrender) {
+    if (this.abandoned) {
       return;
     }
     const guessedLetter = this.randomWordLetters[randomLetterIndex];
@@ -41,7 +41,7 @@ export class Round {
   private triggerMistake() {
     this.currentErrors += 1;
     if (this.currentErrors >= this.maxErrors) {
-      this.surrender = true;
+      this.abandoned = true;
       this.game.surrender();
     }
   }
@@ -62,7 +62,7 @@ export class Game {
     },
     public currentRoundIndex = 0
   ) {}
-  get info(): FinishData {
+  get gameStats(): FinishData {
     const correctRounds = this.rounds.filter((r) => r.currentErrors === 0);
     const errorAmount = this.rounds.reduce((sum, r) => {
       return sum + r.currentErrors;
@@ -94,7 +94,7 @@ export class Game {
   nextRound() {
     const nextRound = this.currentRoundIndex + 1;
     if (nextRound >= this.rounds.length) {
-      this.listeners.onFinish(this.info);
+      this.listeners.onFinish(this.gameStats);
     } else {
       this.currentRoundIndex = nextRound;
     }

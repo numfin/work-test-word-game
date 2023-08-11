@@ -20,7 +20,7 @@ export const AnswerPanel = createComponent((cx, { game }: AnswerPanelProps) => {
         if (!r) {
           return [];
         }
-        if (r.surrender) {
+        if (r.abandoned) {
           return r.word.split("");
         }
         return r.word.slice(0, r.pickedIndexes.size).split("");
@@ -28,7 +28,7 @@ export const AnswerPanel = createComponent((cx, { game }: AnswerPanelProps) => {
       (letter) => {
         return LetterBtn(cx, {
           letter,
-          isInvalid: () => !!round()?.surrender,
+          isInvalid: () => !!round()?.abandoned,
           pick: () => {},
         });
       }
